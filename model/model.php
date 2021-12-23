@@ -5,7 +5,7 @@ class Model
 	public $connection;
 
 
-	// При обращении к классу создадим подключение к БД, к которому потом будем обращаться
+	// При обращении к классу создадим подключение к БД
 	public function __construct()
 	{
 		$this->connection = mysqli_connect(HOST, USER, PASSWORD, DATABASE);
@@ -19,6 +19,19 @@ class Model
 
 
 	// Запрос к БД. В зависимости от типа запроса функция выдает нужные данные (массив или true/false)
+	public function checkTable($name): bool
+	{
+		$sql = "SHOW TABLES FROM " . DATABASE . " LIKE '" . $name . "'";
+		$result = $this->query($sql);
+		if ($result->num_rows) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
+	// Проверка существования таблицы в БД. Если она уже есть, то перезаписывать ее из файла не надо
 	public function query($sql)
 	{
 		$query = $this->connection->query($sql);
@@ -45,19 +58,6 @@ class Model
 		} else {
 			echo($this->connection->error . ' ' . $this->connection->errno);
 			exit;
-		}
-	}
-
-
-	// Проверка существования таблицы в БД. Если она уже есть, то перезаписывать ее из файла не надо
-	public function checkTable($name): bool
-	{
-		$sql = "SHOW TABLES FROM " . DATABASE . " LIKE '" . $name . "'";
-		$result = $this->query($sql);
-		if ($result->num_rows) {
-			return true;
-		} else {
-			return false;
 		}
 	}
 
@@ -126,5 +126,31 @@ class Model
 	{
 		$sql = "ALTER TABLE " . $table1 . " ADD FOREIGN KEY (" . $col1 . ") REFERENCES " . $table2 . "(" . $col2 . ") ON DELETE SET NULL";
 		$this->query($sql);
+	}
+
+
+	// Проверка существования URL в БД, в случае успеха возвращает название продукта
+	public function getPath($href)
+	{
+		$sql = "SELECT name FROM products WHERE href = '" . $href . "'";
+		$result = $this->query($sql);
+		if ($result->num_rows < 0) {
+			return false;
+		} else {
+			return $result->row['name'];
+		}
+	}
+
+
+	// Получение всех данных о статье блога из БД по URL
+	public function getBlogData($href)
+	{
+		$sql = "SELECT * FROM blog WHERE product IN (SELECT name FROM products WHERE href = '" . $href . "')";
+		$result = $this->query($sql);
+		if ($result->num_rows < 0) {
+			return false;
+		} else {
+			return $result->row;
+		}
 	}
 }

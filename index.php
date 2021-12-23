@@ -1,24 +1,15 @@
 <?php
 
 require('config.php');
+require('router/router.php');
 require('model/model.php');
 require('controller/header.php');
-require('controller/footer.php');
-require('controller/catalog.php');
+require('controller/blog.php');
+require('controller/products.php');
 
-
-if (!isset($_GET['action']) || empty($_GET['action'])) {
-	$title = 'Главная страница';
-} elseif (isset($_GET['action']) && $_GET['action'] === 'view') {
-	$title = 'Статья';
-} else {
-	$title = 'Главная страница';
-}
-$copyright = '@copyright 2021';
-
-
-$header = new Header($title);
-$footer = new Footer($copyright);
+$route = new Router($_GET['url']);
+$header = new Header();
+$footer = new Footer();
 $catalog = new Catalog();
 
 

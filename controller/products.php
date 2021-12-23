@@ -1,6 +1,6 @@
 <?php
 
-class Catalog
+class Products
 {
 	private Model $model;
 
@@ -16,8 +16,16 @@ class Catalog
 	{
 		$data = [];
 
+		$this->createTablesFromFiles('/../json');
+
+	}
+
+
+	// Создаем таблицы и наполняем их на основе JSON-файлов
+	public function createTablesFromFiles($jsonPath)
+	{
 		//Смотрим папку /json в корне на предмет наличия файлов для загрузки в БД
-		$files = $this->getJsonFiles(realpath(__DIR__ . '/../json'));
+		$files = $this->getJsonFiles(realpath(__DIR__ . $jsonPath));
 		if ($files) {
 			$createdTables = 0;
 			foreach ($files as $file) {
@@ -47,18 +55,10 @@ class Catalog
 				$this->model->addForeignKey('blog', 'product', 'products', 'name');
 			}
 		}
-
 	}
 
 
 	// Получение массива данных из JSON-файла
-	public function getJsonDataFromFile($file)
-	{
-		return json_decode(file_get_contents($file), true);
-	}
-
-
-	// Получение списка JSON-файла из указанной категории
 	public function getJsonFiles($path)
 	{
 		$files = glob($path . '/*.json');
@@ -66,6 +66,13 @@ class Catalog
 			return $files;
 		}
 		return false;
+	}
+
+
+	// Получение списка JSON-файла из указанной категории
+	public function getJsonDataFromFile($file)
+	{
+		return json_decode(file_get_contents($file), true);
 	}
 
 
