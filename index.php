@@ -10,7 +10,6 @@ require('controller/products.php');
 $route = new Router($_GET['url']);
 $header = new Header();
 $footer = new Footer();
-$catalog = new Catalog();
 
 
 
