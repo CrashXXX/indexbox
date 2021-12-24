@@ -2,14 +2,14 @@
 
 class Header
 {
-	private string $title;
-	private string $description;
-	private string $h1;
+	protected string $title;
+	protected string $description;
 
 
-	public function __construct()
+	public function __construct($title, $description)
 	{
-		//$this->title = $title;
+		$this->setTitle(strip_tags(html_entity_decode($title)));
+		$this->setDescription(strip_tags(html_entity_decode($description)));
 	}
 
 
@@ -22,30 +22,6 @@ class Header
 	public function setDescription($description)
 	{
 		$this->description = $description;
-	}
-
-
-	public function setH1($h1)
-	{
-		$this->h1 = $h1;
-	}
-
-
-	public function getTitle(): string
-	{
-		return $this->title;
-	}
-
-
-	public function getDescription(): string
-	{
-		return $this->description;
-	}
-
-
-	public function getH1(): string
-	{
-		return $this->h1;
 	}
 
 

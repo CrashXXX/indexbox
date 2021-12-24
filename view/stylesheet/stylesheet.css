@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+a, a:visited {
+  color: #4E82FE;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #ffa500;
+}
+
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  width: 1300px;
+  max-width: 95%;
+  margin: 0 auto;
+  background: #f2f6fc;
+}
+
+.head, .container, .footer {
+  margin: 25px 15px;
+  padding: 20px;
+  width: calc(100% - 30px);
+  background: #fff;
+  border-radius: 7px;
+  box-shadow: 0 0 7px 3px rgba(163, 188, 211, 0.25);
+}
+
+.head > div {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.logo {
+  font-size: 40px;
+  max-width: 200px;
+}
+
+.logo span {
+  padding: 5px;
+  background: #fff;
+  color: #4E82FE;
+}
+
+span.blue {
+  background: #4E82FE;
+  color: #fff;
+}
+
+.head-info {
+  font-size: 20px;
+  width: calc(100% - 210px);
+  text-align: center;
+}
+
+.invisible {
+  opacity: 0;
+}
+
+.pull-right {
+  float: right;
+}
+
+.margin-right {
+  margin-right: 20px;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .logo {
+    font-size: 20px;
+    max-width: initial;
+  }
+  .head-info {
+    font-size: 18px;
+    width: auto;
+    text-align: center;
+    margin: 10px;
+  }
+}

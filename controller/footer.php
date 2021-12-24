@@ -2,12 +2,12 @@
 
 class Footer
 {
-	//private $footer;
+	private $footer;
 
 
-	public function __construct()
+	public function __construct($footer)
 	{
-		//$this->footer = $footer;
+		$this->footer = $footer;
 	}
 
 

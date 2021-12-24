@@ -129,23 +129,27 @@ class Model
 	}
 
 
-	// Проверка существования URL в БД, в случае успеха возвращает название продукта
+	// Проверка существования URL в БД по двум таблицами, так как везде есть поле href, в случае успеха возвращает название продукта
 	public function getPath($href)
 	{
 		$sql = "SELECT name FROM products WHERE href = '" . $href . "'";
 		$result = $this->query($sql);
 		if ($result->num_rows < 0) {
-			return false;
-		} else {
-			return $result->row['name'];
+			$sql = "SELECT product FROM blog WHERE href = '" . $href . "'";
+			$result = $this->query($sql);
+			if ($result->num_rows < 0) {
+				return false;
+			}
 		}
+		return $result->row['name'];
 	}
 
 
-	// Получение всех данных о статье блога из БД по URL
-	public function getBlogData($href)
+// Получение всех данных о статье блога из БД по названию
+	public
+	function getBlogData($name)
 	{
-		$sql = "SELECT * FROM blog WHERE product IN (SELECT name FROM products WHERE href = '" . $href . "')";
+		$sql = "SELECT * FROM blog WHERE product = '" . $name . "'";
 		$result = $this->query($sql);
 		if ($result->num_rows < 0) {
 			return false;
