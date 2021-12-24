@@ -2,10 +2,10 @@
 
 class Blog
 {
-	protected $h1;
-	protected $body;
-	protected $views;
-	protected $time;
+	protected string $h1;
+	protected string $body;
+	protected string $views;
+	protected string $time;
 
 
 	public function __construct($data)

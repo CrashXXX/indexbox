@@ -75,6 +75,15 @@ span.blue {
   font-weight: 700;
 }
 
+.product {
+  width: calc(100% - 30px);
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  margin: 20px;
+  padding: 20px;
+  box-shadow: 0 0 7px 3px rgba(163, 188, 211, 0.25);
+}
+
 @media (max-width: 768px) {
   .logo {
     font-size: 20px;

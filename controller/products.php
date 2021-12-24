@@ -3,6 +3,7 @@
 class Products
 {
 	private Model $model;
+	protected $data;
 
 
 	public function __construct()
@@ -15,6 +16,32 @@ class Products
 	public function index()
 	{
 		$this->createTablesFromFiles('/../json');
+
+		$data = false;
+		$products = $this->getProducts();
+		if ($products) {
+			$data = $products;
+		}
+		$this->data = $data;
+	}
+
+
+	// Получение списка продуктов
+	public function getProducts()
+	{
+		$results = $this->model->getProductsData();
+		if ($results) {
+			$products = [];
+			foreach ($results as $result) {
+				$products[] = [
+					'name' => html_entity_decode($result['name']),
+					'href' => $result['href']
+				];
+			}
+		} else {
+			$products = false;
+		}
+		return $products;
 	}
 
 

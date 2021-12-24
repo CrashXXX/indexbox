@@ -134,27 +134,42 @@ class Model
 	{
 		$sql = "SELECT name FROM products WHERE href = '" . $href . "'";
 		$result = $this->query($sql);
-		if ($result->num_rows < 0) {
+		if ($result->num_rows < 1) {
 			$sql = "SELECT product FROM blog WHERE href = '" . $href . "'";
 			$result = $this->query($sql);
-			if ($result->num_rows < 0) {
+			if ($result->num_rows < 1) {
 				return false;
 			}
+			$name = $result->row['product'];
+		} else {
+			$name = $result->row['name'];
 		}
-		return $result->row['name'];
+		return $name;
 	}
 
 
-// Получение всех данных о статье блога из БД по названию
-	public
-	function getBlogData($name)
+	// Получение всех данных о статье блога из БД по названию
+	public function getBlogData($name)
 	{
 		$sql = "SELECT * FROM blog WHERE product = '" . $name . "'";
 		$result = $this->query($sql);
-		if ($result->num_rows < 0) {
+		if ($result->num_rows < 1) {
 			return false;
 		} else {
-			return $result->row;
+			return $result->rows;
+		}
+	}
+
+
+	// Получение всех данных о продуктах
+	public function getProductsData()
+	{
+		$sql = "SELECT * FROM products";
+		$result = $this->query($sql);
+		if ($result->num_rows < 1) {
+			return false;
+		} else {
+			return $result->rows;
 		}
 	}
 }

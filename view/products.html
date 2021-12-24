@@ -1,4 +1,9 @@
 <h1><?=$this->h1?></h1>
-<?=$this->body?>
-<p><?=$this->time?></p>
-<p><?=$this->views?></p>
+<? foreach ($this->data as $product) {
+		$div = '<div class="product">';
+		$div .= '<p>' . $product['name'] . '</p>';
+		$div .= '<p class="pull-right"><a href="' . $product['href'] . '">' . $product['href'] . '</a></p>';
+	$div .= '</div>';
+		echo $div;
+	}
+?>
