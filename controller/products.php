@@ -14,10 +14,7 @@ class Products
 
 	public function index()
 	{
-		$data = [];
-
 		$this->createTablesFromFiles('/../json');
-
 	}
 
 
@@ -97,5 +94,10 @@ class Products
 			}
 		}
 		return $temp_array;
+	}
+
+	public function output()
+	{
+		include('view/products.html');
 	}
 }
