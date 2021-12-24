@@ -11,6 +11,6 @@
 <body>
 <div class="head">
 	<div class="logo"><a href="/"><span>INDEX</span><span class="blue">BOX</span></a></div>
-	<div class="head-info">Products and Blogs - All in one</div>
+	<div class="head-info">Blogs related to Products - All in one</div>
 </div>
-<div class="container invisible">
+<div class="container">

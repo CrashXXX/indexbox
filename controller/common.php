@@ -1,47 +1,52 @@
 <?php
 
-class Products
+class Common
 {
 	private Model $model;
 	protected $data;
 
 
-	public function __construct()
+	public function __construct($h1)
 	{
 		$this->model = new Model();
-		$this->index();
+		$this->index($h1);
 	}
 
 
-	public function index()
+	public function index($h1)
 	{
 		$this->createTablesFromFiles('/../json');
 
-		$data = false;
-		$products = $this->getProducts();
-		if ($products) {
-			$data = $products;
-		}
+		$blogs = $this->getBlogs();
+		if ($blogs) {
+			$data = $blogs;
+            $data['h1'] = $h1;
+		} else {
+            $data = false;
+        }
 		$this->data = $data;
 	}
 
 
-	// Получение списка продуктов
-	public function getProducts()
+	// Получение списка блогов
+	public function getBlogs()
 	{
-		$results = $this->model->getProductsData();
+		$results = $this->model->getAllBlogs();
 		if ($results) {
-			$products = [];
+			$blogs = [];
 			foreach ($results as $result) {
-				$products[] = [
-					'name' => html_entity_decode($result['name']),
-					'href' => $result['href']
+				$blogs[] = [
+					'title' => html_entity_decode($result['title']),
+					'description' => html_entity_decode($result['description']),
+					'views' => $result['views'],
+                    'time_create' => date('d.m.Y', $result['time_create']),
+                    'href' => $result['href']
 				];
 			}
 		} else {
-			$products = false;
+			$blogs = false;
 		}
-		return $products;
+		return $blogs;
 	}
 
 
@@ -101,7 +106,7 @@ class Products
 
 
 	// Поиск и удаление дублей в массиве, полученном из JSON-файла, перед отправкой в БД. Дубли допускать нельзя
-	// Функция универсальная, может искать дубли по разным ключам ассоциативного массива
+	// Функция универсальная, может искать дубли по массиву ключей ассоциативного массива
 	function arrayUnique($array, $keys): array
 	{
 		$temp_array = array();
@@ -123,8 +128,9 @@ class Products
 		return $temp_array;
 	}
 
+
 	public function output()
 	{
-		include('view/products.html');
+		include('view/common.php');
 	}
 }

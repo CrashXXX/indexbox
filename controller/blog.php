@@ -19,7 +19,7 @@ class Blog
 
 	public function output()
 	{
-		include('view/blog.html');
+		include('view/blog.php');
 	}
 
 }

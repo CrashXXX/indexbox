@@ -13,6 +13,6 @@ class Footer
 
 	public function output()
 	{
-		include('view/footer.html');
+		include('view/footer.php');
 	}
 }

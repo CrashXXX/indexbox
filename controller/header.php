@@ -27,6 +27,6 @@ class Header
 
 	public function output()
 	{
-		include('view/head.html');
+		include('view/head.php');
 	}
 }
