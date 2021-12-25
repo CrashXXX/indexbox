@@ -19,47 +19,47 @@ class Model
 
 
 	// Запрос к БД. В зависимости от типа запроса функция выдает нужные данные (массив или true/false)
-    public function query($sql)
-    {
-        $query = $this->connection->query($sql);
+	public function query($sql)
+	{
+		$query = $this->connection->query($sql);
 
-        if (!$this->connection->errno) {
-            if ($query instanceof mysqli_result) {
-                $data = array();
+		if (!$this->connection->errno) {
+			if ($query instanceof mysqli_result) {
+				$data = array();
 
-                while ($row = $query->fetch_assoc()) {
-                    $data[] = $row;
-                }
+				while ($row = $query->fetch_assoc()) {
+					$data[] = $row;
+				}
 
-                $result = new stdClass();
-                $result->num_rows = $query->num_rows;
-                $result->row = isset($data[0]) ? $data[0] : array();
-                $result->rows = $data;
+				$result = new stdClass();
+				$result->num_rows = $query->num_rows;
+				$result->row = isset($data[0]) ? $data[0] : array();
+				$result->rows = $data;
 
-                $query->close();
+				$query->close();
 
-                return $result;
-            } else {
-                return true;
-            }
-        } else {
-            echo($this->connection->error . ' ' . $this->connection->errno);
-            exit;
-        }
-    }
+				return $result;
+			} else {
+				return true;
+			}
+		} else {
+			echo($this->connection->error . ' ' . $this->connection->errno);
+			exit;
+		}
+	}
 
 
 	// Проверка существования таблицы в БД. Если она уже есть, то перезаписывать ее из файла не надо и возвращаем true
-    public function checkTable($name): bool
-    {
-        $sql = "SHOW TABLES FROM " . DATABASE . " LIKE '" . $name . "'";
-        $result = $this->query($sql);
-        if ($result->num_rows) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+	public function checkTable($name): bool
+	{
+		$sql = "SHOW TABLES FROM " . DATABASE . " LIKE '" . $name . "'";
+		$result = $this->query($sql);
+		if ($result->num_rows) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 
 	// Добавление таблицы и ее заполнение. $tableName - имя таблицы, $columns - создаваемые колонки, $rows - строки для их записи в БД
@@ -96,32 +96,8 @@ class Model
 	}
 
 
-	// Поиск и удаление отсутствующих записей в 2-х связанных таблицах. Их быть не должно, иначе не получится их связать внешним ключом
-	// $table1, $table2 - имена таблиц, $col1, $col2 - названия колонок, по которым будет вестись сравнение значений записей
-	public function delNotEqualRows($table1, $table2, $col1, $col2)
-	{
-		$sql = "SELECT {$col1} FROM {$table1} WHERE {$col1} NOT IN (SELECT {$col2} FROM {$table2})";
-		$rows = $this->query($sql);
-		if ($rows) {
-			foreach ($rows->row as $unused) {
-				$sql = "DELETE FROM {$table1} WHERE {$col1} = '" . $unused . "'";
-				$this->query($sql);
-			}
-		}
-
-		$sql = "SELECT {$col2} FROM {$table2} WHERE {$col2} NOT IN (SELECT {$col1} FROM {$table1})";
-		$rows = $this->query($sql);
-		if ($rows) {
-			foreach ($rows->row as $unused) {
-				$sql = "DELETE FROM {$table2} WHERE {$col2} = '" . $unused . "'";
-				$this->query($sql);
-			}
-		}
-	}
-
-
 	// Добавление внешнего ключа в таблицу. $table1 - название подчиненной таблицы, $col1 - название колонки подчиненной таблицы
-	// $table1 - название главной таблицы, $col1 - название колонки главной таблицы
+	// $table2 - название главной таблицы, $col2 - название колонки главной таблицы
 	public function addForeignKey($table1, $col1, $table2, $col2)
 	{
 		$sql = "ALTER TABLE " . $table1 . " ADD FOREIGN KEY (" . $col1 . ") REFERENCES " . $table2 . "(" . $col2 . ") ON DELETE SET NULL";
@@ -142,10 +118,10 @@ class Model
 	}
 
 
-	// Получение всех данных о статье блога из БД по названию
-	public function getAllBlogs($limit = 10)
+	// Получение всех данных о блогах для превью на главной странице и для AJAX
+	public function getAllBlogs($limit = 10, $order = 'time_create', $type = 'DESC')
 	{
-		$sql = "SELECT * FROM blog ORDER BY time_create DESC LIMIT {$limit}";
+		$sql = "SELECT * FROM blog ORDER BY $order $type LIMIT $limit";
 		$result = $this->query($sql);
 		if ($result->num_rows == 0) {
 			return false;
@@ -155,10 +131,37 @@ class Model
 	}
 
 
-	// Получение всех данных о продуктах
-	public function getProductsData()
+	// Получение всех данных о блогах по названию продукта для главной страницы
+	public function getProductBlogs($products)
 	{
-		$sql = "SELECT * FROM products ORDER BY name";
+		$data = [];
+		foreach ($products as $product) {
+			$sql = "SELECT * FROM blog WHERE product = '" . $product['name'] . "'";
+			$result = $this->query($sql);
+			if ($result->num_rows > 0) {
+				$data = $result->rows;
+			}
+		}
+		return $data;
+	}
+
+
+	// Обновление кол-ва просмотров блога
+	public function updateBlogViews($href)
+	{
+		$sql = "UPDATE blog SET views = views + 1 WHERE href = '" . $href . "'";
+		$this->query($sql);
+	}
+
+
+	// Получение всех данных о продуктах/продукте
+	public function getProductsData($href = false)
+	{
+		$sql = "SELECT * FROM products";
+		if ($href) {
+			$sql .= " WHERE href = '" . $href . "'";
+		}
+		$sql .= " ORDER BY name";
 		$result = $this->query($sql);
 		if ($result->num_rows == 0) {
 			return false;

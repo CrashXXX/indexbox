@@ -26,6 +26,7 @@ class ColumnLeft
 
     public function output()
     {
-        include('view/column-left.php');
+        $products = $this->products;
+		include('view/column-left.php');
     }
 }

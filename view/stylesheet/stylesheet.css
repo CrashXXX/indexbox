@@ -113,7 +113,7 @@ span.blue {
 }
 
 .option-div-container input, .option-div-container select {
-	margin: 10px 0 0;
+	margin: 10px 5px 0 0;
 }
 
 .option-div-container input:hover, .option-div-container label:hover, .option-div-container p:hover {
