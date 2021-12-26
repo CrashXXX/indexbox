@@ -4,7 +4,6 @@ class Model
 {
 	public $connection;
 
-
 	// При обращении к классу создадим подключение к БД
 	public function __construct()
 	{
@@ -14,6 +13,19 @@ class Model
 			exit;
 		} else {
 			$this->connection->set_charset("utf8");
+		}
+	}
+
+
+	// Проверка существования таблицы в БД. Если она уже есть, то перезаписывать ее из файла не надо и возвращаем true
+	public function checkTable($name): bool
+	{
+		$sql = "SHOW TABLES FROM " . DATABASE . " LIKE '" . $name . "'";
+		$result = $this->query($sql);
+		if ($result->num_rows) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -45,19 +57,6 @@ class Model
 		} else {
 			echo($this->connection->error . ' ' . $this->connection->errno);
 			exit;
-		}
-	}
-
-
-	// Проверка существования таблицы в БД. Если она уже есть, то перезаписывать ее из файла не надо и возвращаем true
-	public function checkTable($name): bool
-	{
-		$sql = "SHOW TABLES FROM " . DATABASE . " LIKE '" . $name . "'";
-		$result = $this->query($sql);
-		if ($result->num_rows) {
-			return true;
-		} else {
-			return false;
 		}
 	}
 
@@ -106,7 +105,7 @@ class Model
 	}
 
 
-	// Получение всех данных о статье блога из БД по URL
+	// Получение данных о статье блога из БД по URL
 	public function getBlogData($href)
 	{
 		$sql = "SELECT * FROM blog WHERE href = '" . $href . "'";
@@ -119,11 +118,14 @@ class Model
 	}
 
 
-	// Получение всех данных о блогах для превью на главной странице и для AJAX
-	public function getAllBlogs($limit = 10, $order = 'time_create', $type = 'DESC', $href = false)
+	// Получение данных о превью блогов для главной страницы с учетом фильтров
+	public function getBlogReviews($href = false, $limit = 10, $order = 'time_create', $type = 'DESC')
 	{
-		$sql = "SELECT *, blog.href AS href FROM blog";
-		if ($href) {
+		if (!$href) {
+			$sql = "SELECT href, title, description, views, time_create FROM blog";
+		} else {
+			$sql = "SELECT blog.href, blog.title, blog.description, blog.views, blog.time_create,";
+			$sql .= " products.name AS product_name FROM blog";
 			$sql .= " JOIN products ON (products.name = blog.product AND products.href = '" . $href . "')";
 		}
 		$sql .= " ORDER BY $order $type LIMIT $limit";
@@ -136,21 +138,6 @@ class Model
 	}
 
 
-	// Получение всех данных о блогах по названию продукта для главной страницы
-	public function getProductBlogs($products)
-	{
-		$data = [];
-		foreach ($products as $product) {
-			$sql = "SELECT * FROM blog WHERE product = '" . $product['name'] . "'";
-			$result = $this->query($sql);
-			if ($result->num_rows > 0) {
-				$data = $result->rows;
-			}
-		}
-		return $data;
-	}
-
-
 	// Обновление кол-ва просмотров блога
 	public function updateBlogViews($href)
 	{
@@ -159,7 +146,7 @@ class Model
 	}
 
 
-	// Получение всех данных о продуктах/продукте
+	// Получение всех данных о продуктах/продукте для левой колонки фильтра
 	public function getProductsData($href = false)
 	{
 		$sql = "SELECT * FROM products";
@@ -172,6 +159,32 @@ class Model
 			return false;
 		} else {
 			return $result->rows;
+		}
+	}
+
+
+	// Проверка наличия ЧПУ-ссылки в блогах
+	public function getRouteBlog($href)
+	{
+		$sql = "SELECT href FROM blog WHERE href = '" . $href . "'";
+		$result = $this->query($sql);
+		if ($result->num_rows == 0) {
+			return false;
+		} else {
+			return $result->row;
+		}
+	}
+
+
+	// Проверка наличия ЧПУ-ссылки в продуктах для главной страницы
+	public function getRouteCommon($href)
+	{
+		$sql = "SELECT href FROM products WHERE href = '" . $href . "'";
+		$result = $this->query($sql);
+		if ($result->num_rows == 0) {
+			return false;
+		} else {
+			return $result->row;
 		}
 	}
 

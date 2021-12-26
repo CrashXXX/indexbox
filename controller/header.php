@@ -5,7 +5,6 @@ class Header
 	protected string $title;
 	protected string $description;
 
-
 	public function __construct($title, $description)
 	{
 		$this->setTitle(strip_tags(html_entity_decode($title)));

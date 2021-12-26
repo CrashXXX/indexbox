@@ -2,43 +2,29 @@
 
 class Blog
 {
+	public $data;
 	private Model $model;
-	protected string $h1;
-	protected string $body;
-	protected string $views;
-	protected string $time;
 
-
-	public function __construct($data = false)
+	public function __construct($href)
 	{
 		$this->model = new Model();
-		if ($data) {
-			$this->model->updateBlogViews($data['href']);
-			$this->h1 = strip_tags(html_entity_decode($data['h1']));
-			$this->body = html_entity_decode($data['body']);
-			$this->views = (int)$data['views'] + 1;
-			$this->time = date('d.m.Y', $data['time_create']);
-		}
-	}
+		$this->model->updateBlogViews($href);
+		$blog = $this->model->getBlogData($href);
 
+		$this->data['title'] = html_entity_decode($blog['title']);
+		$this->data['body'] = html_entity_decode($blog['body']);
+		$this->data['description'] = html_entity_decode($blog['description']);
+		$this->data['product'] = html_entity_decode($blog['product']);
 
-	public function getBlogData($href)
-	{
-		$data =  $this->model->getBlogData($href);
-		$data['title'] = html_entity_decode($data['title']);
-		$data['body'] = html_entity_decode($data['body']);
-		$data['description'] = html_entity_decode($data['description']);
-		$data['product'] = html_entity_decode($data['product']);
-		return $data;
+		$this->data['h1'] = strip_tags(html_entity_decode($blog['h1']));
+		$this->data['views'] = $blog['views'];
+		$this->data['time'] = date('d.m.Y', $blog['time_create']);
 	}
 
 
 	public function output()
 	{
-		$h1 = $this->h1;
-		$body = $this->body;
-		$views = $this->views;
-		$time = $this->time;
+		$data = $this->data;
 		include('view/blog.php');
 	}
 

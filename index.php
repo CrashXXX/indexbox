@@ -15,38 +15,21 @@ $tables->createTablesFromFiles('/../json');
 
 $router = new Router($_GET['url']);
 
-if ($router->route['path'] === 'blog') {
-	$data = $router->route['data'];
-	$data['h1'] = $data['title'];
-	$body = new Blog($data);
-	$left = false;
-	$headers['title'] = $data['title'];
-	$headers['description'] = $data['description'];
-} elseif ($router->route['path'] === 'common') {
-	if ($router->route['data']) {
-		$data = $router->route['data'];
-		$headers['title'] = $router->route['data'][0]['name'];
-		$headers['description'] = $router->route['data'][0]['name'];
-		$headers['h1'] = $router->route['data'][0]['name'];
-		$headers['href'] = $router->route['data'][0]['href'];
-	} else {
-		$data = false;
-		$headers['title'] = 'Main Page';
-		$headers['description'] = 'Description';
-		$headers['h1'] = 'Common blog list';
-		$headers['href'] = false;
-	}
-	$body = new Common($data , $headers['h1'], $headers['href']);
-	$left = new ColumnLeft($headers['href']);
+if ($router->route['path'] === 'common') {
+    $body = new Common($router->route['href']);
+    $left = new ColumnLeft($router->route['href']);
+} else {
+    $body = new Blog($router->route['href']);
+    $left = false;
 }
 
 $footerContent = '<a href="/">INDEXBOX</a> @copyright 2021. All right reserved.';
-$header = new Header($headers['title'], $headers['description']);
+$header = new Header($body->data['title'], $body->data['description']);
 $footer = new Footer($footerContent);
 
 $header->output();
 if ($left) {
-	$left->output();
+    $left->output();
 }
 $body->output();
 $footer->output();

@@ -27,7 +27,7 @@ function updateContent(product = false) {
 		updateFilterProducts = product;
 	}
 	$.ajax({
-		url: '/ajax/requests.php?action=sortPreviews',
+		url: '/common/sort',
 		type: 'post',
 		data: 'sort=' + sort + '&limit=' + limit + '&h1=' + h1 + '&href=' + href,
 		dataType: 'html',

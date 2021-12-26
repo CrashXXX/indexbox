@@ -4,7 +4,6 @@ class Footer
 {
 	private $footer;
 
-
 	public function __construct($footer)
 	{
 		$this->footer = $footer;
