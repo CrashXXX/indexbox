@@ -50,6 +50,7 @@ function updateContent(product = false) {
 				});
 			}
 			reviews.replaceWith(html);
+			$('title').text($('h1').text());
 			window.history.pushState('', '', href);
 		},
 		complete: function () {

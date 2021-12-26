@@ -27,6 +27,8 @@ class Header
 
 	public function output()
 	{
+		$title = $this->title;
+		$description = $this->description;
 		include('view/head.php');
 	}
 }

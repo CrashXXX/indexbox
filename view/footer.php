@@ -1,4 +1,4 @@
 </div>
-<div class="footer"><?=$this->footer?></div>
+<div class="footer"><?=$footer?></div>
 </body>
 </html>

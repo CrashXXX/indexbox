@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title><?=$this->title?></title>
-	<meta name="description" content="<?=$this->description?>">
+	<title><?=$title?></title>
+	<meta name="description" content="<?=$description?>">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 	<script defer src="/view/script/script.js"></script>
 	<link href="/view/stylesheet/stylesheet.css" rel="stylesheet">

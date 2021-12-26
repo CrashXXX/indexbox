@@ -10,7 +10,7 @@ if ($_GET['action']) {
 }
 
 
-// Запрос
+// AJAX Запрос на сортировку и отбор превью блогов
 function sortPreviews($post)
 {
 	require('../model/model.php');

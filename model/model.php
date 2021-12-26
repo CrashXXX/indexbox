@@ -70,6 +70,7 @@ class Model
 			$sql .= $name . ' ' . $value . ', ';
 		}
 		$sql = substr($sql, 0, -2) . ')';
+		$sql .= " ENGINE=InnoDB CHARACTER SET utf8";
 		$this->query($sql);
 
 		foreach ($rows as $value) {
@@ -124,7 +125,6 @@ class Model
 		$sql = "SELECT *, blog.href AS href FROM blog";
 		if ($href) {
 			$sql .= " JOIN products ON (products.name = blog.product AND products.href = '" . $href . "')";
-			//$sql .= " JOIN products ON (products.name = blog.product) WHERE products.href = '" . $href . "'";
 		}
 		$sql .= " ORDER BY $order $type LIMIT $limit";
 		$result = $this->query($sql);
@@ -173,5 +173,21 @@ class Model
 		} else {
 			return $result->rows;
 		}
+	}
+
+
+	// Запись изменений блога в БД, будем делать отбор по URL, так как для блогов он уникальный в задании
+	public function editBlog($data)
+	{
+		$sql = 'UPDATE blog SET';
+		$sql .= ' href = "' . $data['href'] . '",';
+		$sql .= ' title = "' . htmlentities($data['title']) . '",';
+		$sql .= ' body = "' . htmlentities($data['body']) . '",';
+		$sql .= ' description = "' . htmlentities($data['description']) . '",';
+		$sql .= ' product = "' . htmlentities($data['product']) . '",';
+		$sql .= ' views = ' . $data['views'] . ',';
+		$sql .= ' time_create = ' . $data['time_create'];
+		$sql .= ' WHERE href = "' . $data['href'] . '"';
+		$this->query($sql); // можно добавить в начале return, чтобы реагировать на результат в админке
 	}
 }

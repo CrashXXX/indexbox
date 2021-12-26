@@ -13,6 +13,7 @@ class Footer
 
 	public function output()
 	{
+		$footer = $this->footer;
 		include('view/footer.php');
 	}
 }

@@ -1,13 +1,12 @@
 <?php
 
-class AddTables
+class TablesActions
 {
 	private Model $model;
 
 	public function __construct()
 	{
 		$this->model = new Model();
-		$this->createTablesFromFiles('/../json');
 	}
 
 
@@ -20,6 +19,7 @@ class AddTables
 			$createdTables = 0;
 			foreach ($files as $file) {
 				$fileName = pathinfo($file, PATHINFO_FILENAME);
+				// Если таблица уже есть, то не создаем ее и не заполняем
 				if ($this->model->checkTable($fileName)) {
 					continue;
 				}
@@ -27,14 +27,14 @@ class AddTables
 				if ($json) {
 					$columns = $json['columns'];
 					$rows = $json['data'];
-					$rows = $this->arrayUnique($rows, ['name']); // name - столбец в главной таблице для связки внешним ключом, оно должно быть уникальным
+					$rows = $this->arrayUnique($rows, ['name']); // name - столбец в главной таблице для связки внешним ключом, значения должны быть уникальными
 					if ($columns && $rows) {
 						$this->model->addTable($fileName, $columns, $rows);
 						$createdTables += 1;
 					}
 				}
 			}
-			// Так как машина не сможет точно узнать, какие колонки надо индексировать и связывать внешним ключом, подставим их вручную, в будущем их можно передавать из админки
+			// Так как машина не сможет точно узнать, какие колонки надо индексировать и связывать внешним ключом, подставим их значения вручную, в будущем их можно передавать из админки
 			// Связываем таблицы только если их минимум 2
 			if ($createdTables > 1) {
 				$this->model->addTableIndex('blog', 'product_idx', 'product');
@@ -66,7 +66,7 @@ class AddTables
 
 
 	// Поиск и удаление дублей в массиве, полученном из JSON-файла, перед отправкой в БД. Дубли допускать нельзя
-	// Функция универсальная, может искать дубли по массиву ключей ассоциативного массива
+	// Функция универсальная, может искать дубли по указанным ключам ассоциативного массива
 	function arrayUnique($array, $keys): array
 	{
 		$temp_array = array();
@@ -89,5 +89,13 @@ class AddTables
 			$temp_array = $array;
 		}
 		return $temp_array;
+	}
+
+
+	// Функция обновления данных о статье. Она нигде не используется, но создана на будущее
+	// Бедум считать, что все данные уже получены из контроллера, изменены в админке и отправлены из формы на сайте
+	public function editBlog($data)
+	{
+		$this->model->editBlog($data); // можно добавить в начале return, чтобы реагировать на результат в админке
 	}
 }

@@ -3,15 +3,15 @@
 require('config.php');
 require('router/router.php');
 require('model/model.php');
-require('controller/add-tables.php');
+require('controller/tables-actions.php');
 require('controller/header.php');
 require('controller/footer.php');
 require('controller/blog.php');
 require('controller/common.php');
 require('controller/column-left.php');
 
-$tablesFromJson = new AddTables(); // Класс для создания и наполнения таблиц из JSON-афйлов
-$tablesFromJson->createTablesFromFiles('/../json');
+$tables = new TablesActions(); // Класс для создания и наполнения таблиц из JSON-афйлов
+$tables->createTablesFromFiles('/../json');
 
 $router = new Router($_GET['url']);
 
@@ -20,6 +20,8 @@ if ($router->route['path'] === 'blog') {
 	$data['h1'] = $data['title'];
 	$body = new Blog($data);
 	$left = false;
+	$headers['title'] = $data['title'];
+	$headers['description'] = $data['description'];
 } elseif ($router->route['path'] === 'common') {
 	if ($router->route['data']) {
 		$data = $router->route['data'];
@@ -48,3 +50,9 @@ if ($left) {
 }
 $body->output();
 $footer->output();
+
+// Пример использоватения методов получения информации о блоге и ее записи в БД в текущих условиях
+$blog = new Blog();
+$data = $blog->getBlogData('global-paperboard-case-material-market-2020-key-insights');
+$data['views'] = (int)$data['views'] + 1000;
+$tables->editBlog($data);
