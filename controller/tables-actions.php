@@ -96,6 +96,8 @@ class TablesActions
 	// Бедум считать, что все данные уже получены из контроллера, изменены в админке и отправлены из формы на сайте
 	public function editBlog($data)
 	{
-		$this->model->editBlog($data); // можно добавить в начале return, чтобы реагировать на результат в админке
+		if ($data && is_array($data)) {
+			$this->model->editBlog($data); // можно добавить в начале return, чтобы реагировать на результат в админке
+		}
 	}
 }
