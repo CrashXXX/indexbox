@@ -34,7 +34,7 @@ if ($left) {
 $body->output();
 $footer->output();
 
-// Пример использоватения методов получения информации о блоге и ее записи в БД в текущих условиях
+// Пример использования методов получения информации о блоге и ее записи в БД в текущих условиях
 /*
 $blog = new Blog();
 $data = $blog->getBlogData('global-paperboard-case-material-market-2020-key-insights');
