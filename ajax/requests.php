@@ -47,8 +47,9 @@ function sortPreviews($post)
 		}
 	}
 	$limit = (int)$post['limit'];
+	$href = $post['href'];
 
-	$results = $model->getAllBlogs($limit, $order, $type);
+	$results = $model->getAllBlogs($limit, $order, $type, $href);
 	if ($results) {
 		foreach ($results as $result) {
 			$data['reviews'][] = [
@@ -59,8 +60,11 @@ function sortPreviews($post)
 				'href' => $result['href']
 			];
 		}
+		$data['h1'] = $results[0]['name'];
+	} else {
+		$data['h1'] = $post['h1'];
 	}
-	$data['h1'] = $post['h1'];
+	$data['href'] = $post['href'];
 	ob_start();
 	include('../view/common.php');
 	$result = ob_get_clean();

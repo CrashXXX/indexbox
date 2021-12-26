@@ -5,11 +5,12 @@ class Common
 	protected $data;
 	private Model $model;
 
-	public function __construct($products, $h1)
+	public function __construct($products, $h1, $href)
 	{
 		$this->model = new Model();
 		$this->index($products);
 		$this->data['h1'] = $h1;
+		$this->data['href'] = $href;
 	}
 
 

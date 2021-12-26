@@ -4,8 +4,9 @@ class ColumnLeft
 {
     private Model $model;
     protected $products;
+	protected $href;
 
-    public function __construct()
+    public function __construct($href)
     {
         $this->model = new Model();
         $results = $this->model->getProductsData();
@@ -21,12 +22,14 @@ class ColumnLeft
             $products = false;
         }
         $this->products = $products;
+		$this->href = $href;
     }
 
 
     public function output()
     {
-        $products = $this->products;
+        $data['products'] = $this->products;
+        $data['href'] = $this->href;
 		include('view/column-left.php');
     }
 }

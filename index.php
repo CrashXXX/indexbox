@@ -26,14 +26,16 @@ if ($router->route['path'] === 'blog') {
 		$headers['title'] = $router->route['data'][0]['name'];
 		$headers['description'] = $router->route['data'][0]['name'];
 		$headers['h1'] = $router->route['data'][0]['name'];
+		$headers['href'] = $router->route['data'][0]['href'];
 	} else {
 		$data = false;
 		$headers['title'] = 'Main Page';
 		$headers['description'] = 'Description';
 		$headers['h1'] = 'Common blog list';
+		$headers['href'] = false;
 	}
-	$body = new Common($data , $headers['h1']);
-	$left = new ColumnLeft();
+	$body = new Common($data , $headers['h1'], $headers['href']);
+	$left = new ColumnLeft($headers['href']);
 }
 
 $footerContent = '<a href="/">INDEXBOX</a> @copyright 2021. All right reserved.';

@@ -119,9 +119,14 @@ class Model
 
 
 	// Получение всех данных о блогах для превью на главной странице и для AJAX
-	public function getAllBlogs($limit = 10, $order = 'time_create', $type = 'DESC')
+	public function getAllBlogs($limit = 10, $order = 'time_create', $type = 'DESC', $href = false)
 	{
-		$sql = "SELECT * FROM blog ORDER BY $order $type LIMIT $limit";
+		$sql = "SELECT *, blog.href AS href FROM blog";
+		if ($href) {
+			$sql .= " JOIN products ON (products.name = blog.product AND products.href = '" . $href . "')";
+			//$sql .= " JOIN products ON (products.name = blog.product) WHERE products.href = '" . $href . "'";
+		}
+		$sql .= " ORDER BY $order $type LIMIT $limit";
 		$result = $this->query($sql);
 		if ($result->num_rows == 0) {
 			return false;

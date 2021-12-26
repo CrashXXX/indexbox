@@ -116,7 +116,7 @@ span.blue {
 	margin: 10px 5px 0 0;
 }
 
-.option-div-container input:hover, .option-div-container label:hover, .option-div-container p:hover {
+.option-div-container input:hover, .option-div-container label:hover {
 	cursor: pointer;
 	color: #4E82FE;
 }
